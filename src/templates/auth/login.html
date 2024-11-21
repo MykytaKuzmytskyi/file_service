@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+ <h1 class="text-center mb-4">Login</h1>
+
+ <div class="card shadow mb-4">
+  <div class="card-header bg-primary text-white">
+   <h2 class="h5">Login to Your Account</h2>
+  </div>
+  <div class="card-body">
+   <form id="login-form">
+    <div class="mb-3">
+     <label for="email" class="form-label">Email</label>
+     <input type="email" class="form-control" id="email" name="email" required>
+    </div>
+    <div class="mb-3">
+     <label for="password" class="form-label">Password</label>
+     <input type="password" class="form-control" id="password" name="password" required>
+    </div>
+    <button type="submit" class="btn btn-primary" id="login-btn">Login</button>
+   </form>
+  </div>
+ </div>
+
+ <p class="text-center">Don't have an account? <a href="/register">Register here</a></p>
+ <script>
+  document.getElementById("login-form").addEventListener("submit", async function (event) {
+    event.preventDefault(); // Отключаем стандартное поведение формы
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    try {
+        const response = await fetch("http://127.0.0.1:8000/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams({
+                grant_type: "password",
+                username: email,
+                password: password,
+            }),
+        });
+
+        if (response.status === 204) {
+            // Сервер записал токен в cookie
+            window.location.href = "/files"; // Перенаправляем на страницу файлов
+        } else {
+            const errorData = await response.json();
+            alert("Login failed: " + (errorData.detail || "Unknown error"));
+        }
+    } catch (error) {
+        console.error("An error occurred:", error);
+        alert("An unexpected error occurred. Please try again.");
+    }
+});
+
+
+ </script>
+
+{% endblock %}

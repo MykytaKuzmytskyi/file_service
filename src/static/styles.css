@@ -1,0 +1,16 @@
+/* Глобальные стили */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+/* Контейнер для всего контента */
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Убедитесь, что основной контент растягивается */
+.container {
+    flex-grow: 1;
+}

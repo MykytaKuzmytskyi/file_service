@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<h1 class="text-center mb-4">Register</h1>
+
+<div class="card shadow mb-4">
+    <div class="card-header bg-primary text-white">
+        <h2 class="h5">Create an Account</h2>
+    </div>
+    <div class="card-body">
+        <form id="register-form">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <button type="submit" class="btn btn-success">Register</button>
+        </form>
+    </div>
+</div>
+
+<p class="text-center">Already have an account? <a href="/login">Login here</a></p>
+
+<script>
+    document.getElementById("register-form").addEventListener("submit", async function (event) {
+        event.preventDefault(); // Отключаем стандартное поведение формы
+
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const username = document.getElementById("username").value;
+
+        try {
+            // 1. Отправляем запрос на регистрацию
+            const registerResponse = await fetch("http://127.0.0.1:8000/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                    username: username,
+                    is_active: true,
+                    is_superuser: false,
+                    is_verified: false,
+                }),
+            });
+
+            if (registerResponse.status === 201) {
+                // Регистрация успешна, логиним пользователя
+                const loginResponse = await fetch("http://127.0.0.1:8000/auth/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: new URLSearchParams({
+                        grant_type: "password",
+                        username: email,
+                        password: password,
+                    }),
+                });
+
+                if (loginResponse.status === 204) {
+                    // Логин успешен, перенаправляем на страницу файлов
+                    window.location.href = "/files";
+                } else {
+                    alert("Login failed after registration. Please try to log in manually.");
+                }
+            } else {
+                const errorData = await registerResponse.json();
+                alert("Registration failed: " + errorData.detail || "Unknown error");
+            }
+        } catch (error) {
+            console.error("An error occurred:", error);
+            alert("An unexpected error occurred. Please try again.");
+        }
+    });
+</script>
+{% endblock %}
