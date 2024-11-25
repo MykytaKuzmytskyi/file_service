@@ -6,6 +6,6 @@ class Settings(BaseSettings):
 
     app_name: str = "FileService"
     SQLALCHEMY_DATABASE_URL: str
-
+    USER_SECRET_KEY: str
 
 settings = Settings()
