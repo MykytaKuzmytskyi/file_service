@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}File Manager{% endblock %}
+
+{% block content %}
+<h1 class="text-center mb-4">File Manager</h1>
+
+{#{% if user %}#}
+{#<p class="text-end">#}
+{#    Hello, {{ user.email }}!#}
+{#    <button class="btn btn-link text-decoration-none" id="logout-btn">Logout</button>#}
+{#</p>#}
+{#{% endif %}#}
+
+<div class="card shadow mb-4">
+    <div class="card-header bg-primary text-white">
+        <h2 class="h5">Upload a File</h2>
+    </div>
+    <div class="card-body">
+        <form id="upload-form" action="/files/upload" method="post" enctype="multipart/form-data" class="d-flex">
+            <input class="form-control me-2" type="file" name="file" required>
+            <button class="btn btn-success" type="submit">Upload</button>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow">
+    <div class="card-header bg-secondary text-white">
+        <h2 class="h5">Available Files</h2>
+    </div>
+    <div class="card-body">
+        {% if files %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Filename</th>
+                    <th>Downloads</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for file in files %}
+                <tr>
+                    <td>{{ file.filename }}</td>
+                    <td id="downloads-{{ file.id }}">{{ file.downloads }}</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm">Download</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No files available.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
