@@ -4,6 +4,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import relationship
 
 from db.database import Base
+from src.users.models import User
 
 
 class File(Base):
@@ -16,7 +17,7 @@ class File(Base):
     downloads = Column(Integer, default=0)
     uploaded_at = Column(DateTime, default=datetime.datetime.utcnow)
 
-    uploader = relationship("User", back_populates="uploaded_files")
+    uploader = relationship(User, back_populates="uploaded_files")
     permissions = relationship("FilePermission", back_populates="file", cascade="all, delete-orphan")
 
 
@@ -30,8 +31,8 @@ class FilePermission(Base):
     granted_at = Column(DateTime, default=datetime.datetime.utcnow)
     is_active = Column(Boolean, default=True)
 
-    user = relationship("User", foreign_keys=[user_id])
+    user = relationship(User, foreign_keys=[user_id])
 
-    granted_by = relationship("User", foreign_keys=[granted_by_id])
+    granted_by = relationship(User, foreign_keys=[granted_by_id])
 
     file = relationship("File", back_populates="permissions")
