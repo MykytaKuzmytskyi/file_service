@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+
 from src.files.routers import router as file_routers
 from src.user.routers import router as user_routers
 

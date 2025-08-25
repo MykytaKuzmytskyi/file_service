@@ -36,8 +36,8 @@
 
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
-        const username = document.getElementById("username").value;
-
+        console.log(password)
+        console.log(email)
         try {
             // 1. Отправляем запрос на регистрацию
             const registerResponse = await fetch("http://127.0.0.1:8000/auth/register", {
